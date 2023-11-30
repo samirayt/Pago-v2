@@ -69,9 +69,9 @@ getgenv().AutoDetectSpam = true
               local PlayerDistance = (PlayerPP.Position - NearestPlayer.PrimaryPart.Position).Magnitude
               local BallDistance = (PlayerPP.Position - ball.Position).Magnitude
               
-              DetectSpamDistance = 25 + math.clamp(ParryCounter / 3, 0, 25)
+              DetectSpamDistance = 0.001 + math.clamp(ParryCounter / 0, 0, 0.001)
               
-              if ParryCounter > 2 and PlayerDistance < DetectSpamDistance and BallDistance < 0.001 then
+              if ParryCounter > 2 and PlayerDistance < DetectSpamDistance and BallDistance < 55 then
                 getgenv().SpamClickA = true
               else
                 getgenv().SpamClickA = false
