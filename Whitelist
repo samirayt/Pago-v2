@@ -35,7 +35,7 @@ getgenv().AutoDetectSpam = true
         local function SuperClick()
           task.spawn(function()
             if IsAlive() and #Alive:GetChildren() > 1 then
-              local args1 = 0.5
+              local args1 = 0.001
               local args2 = CFrame.new()
               local args3 = {["enzo"] = Vector3.new()}
               local args4 = {500, 500}
@@ -56,7 +56,7 @@ getgenv().AutoDetectSpam = true
         end)
         
         local ParryCounter = 0
-        local DetectSpamDistance = 0
+        local DetectSpamDistance = 0.001
         
         local function GetBall(ball)
           local Target = ""
@@ -71,7 +71,7 @@ getgenv().AutoDetectSpam = true
               
               DetectSpamDistance = 25 + math.clamp(ParryCounter / 3, 0, 25)
               
-              if ParryCounter > 2 and PlayerDistance < DetectSpamDistance and BallDistance < 55 then
+              if ParryCounter > 2 and PlayerDistance < DetectSpamDistance and BallDistance < 0.001 then
                 getgenv().SpamClickA = true
               else
                 getgenv().SpamClickA = false
