@@ -50,12 +50,12 @@ if not _G.Settings then
         MeshParts = {
             LowerQuality = true,
             Invisible = false,
-            NoTexture = false,
+            NoTexture = true,
             NoMesh = false,
             Destroy = false
         },
         Other = {
-            ["FPS Cap"] = 520, -- Set this true to uncap FPS
+            ["FPS Cap"] = 60, -- Set this true to uncap FPS
             ["No Camera Effects"] = true,
             ["No Clothes"] = true,
             ["Low Water Graphics"] = true,
