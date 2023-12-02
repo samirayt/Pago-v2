@@ -25,8 +25,8 @@ if not _G.Settings then
             ["Ignore Tools"] = true
         },
         Meshes = {
-            NoMesh = false,
-            NoTexture = false,
+            NoMesh = true,
+            NoTexture = true,
             Destroy = false
         },
         Images = {
@@ -43,19 +43,19 @@ if not _G.Settings then
             Destroy = false
         },
         TextLabels = {
-            LowerQuality = false,
+            LowerQuality = true,
             Invisible = false,
             Destroy = false
         },
         MeshParts = {
             LowerQuality = true,
-            Invisible = false,
+            Invisible = true,
             NoTexture = true,
-            NoMesh = false,
+            NoMesh = true,
             Destroy = false
         },
         Other = {
-            ["FPS Cap"] = 60, -- Set this true to uncap FPS
+            ["FPS Cap"] = 1000, -- Set this true to uncap FPS
             ["No Camera Effects"] = true,
             ["No Clothes"] = true,
             ["Low Water Graphics"] = true,
