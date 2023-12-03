@@ -668,9 +668,15 @@ local Toggle = AddToggle(Main, {
   Name = "Auto detect",
   Default = true,
   Callback = function(Value)
-  loadstring(game:HttpGet("https://pastefy.app/fXr5ymgk/raw"))()
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/samirayt/SCRIPT-FREE/main/Gratis"))()
   end
 })
+
+local Toggle = AddToggle(Main, {
+  Name = "Auto detectV1",
+  Default = true,
+  Callback = function(Value)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/samirayt/Ksksk/main/Script%20pago"))()
 
 local Dropdownpet = AddDropdown(Main, {
   Name = "Escolha o Modo",
