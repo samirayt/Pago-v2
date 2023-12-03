@@ -388,8 +388,8 @@ local heartbeatConnection
 
 MakeWindow({
   Hub = {
-    Title = "Berserk Hub V2",
-    Animation = "Berserk Hub V2"
+    Title = "Berserk Hub Paid",
+    Animation = "Berserk Hub Paid"
   },
   Key = {
     KeySystem = false,
@@ -428,6 +428,15 @@ local Visual = MakeTab({Name = "Visual"})
 local Misc = MakeTab({Name = "Misc"})
 
 local section01 = AddSection(Main, {"AutoRebater"})
+
+local ToggleParry = AddToggle(Main, {
+  Name = "AutoParryV1",
+  Default = false,
+  Callback = function(Value)
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/Hosvile/Refinement/main/MC%3ABlade%20Ball%20Parry%20V4.0.0",true))()
+  loadstring(game:HttpGet("https://pastebin.com/raw/t2391h1A"))()
+end
+})
 
 local ToggleParry = AddToggle(Main, {
   Name = "AutoParryV2",
@@ -632,92 +641,34 @@ local Toggle = AddToggle(Main, {
   end
 })
 
-local Toggle = AddToggle(Main, {
-  Name = "Manual SpamV1",
-  Default = false,
-  Callback = function(Value)
-  local gui = Instance.new("ScreenGui")
-  gui.ResetOnSpawn = false
-  gui.Parent = game.CoreGui
-  
-  local frame = Instance.new("Frame")
-  frame.Position = UDim2.new(0, 40, 0, 40)
-  frame.Size = UDim2.new(0, 70, 0, 50)
-  frame.BackgroundColor3 = Color3.new(0, 0, 0)
-  frame.BorderSizePixel = 0
-  frame.Parent = gui
-  
-  local button = Instance.new("TextButton")
-  button.Text = "Deactivate"
-  button.Size = UDim2.new(1, -10, 1, -10)
-  button.Position = UDim2.new(0, 20, 0, 20)
-  button.BackgroundColor3 = Color3.new(1, 1, 1)
-  button.BorderColor3 = Color3.new(0, 0, 0)
-  button.BorderSizePixel = 1
-  button.Font = Enum.Font.SourceSans
-  button.TextColor3 = Color3.new(0, 0, 0)
-  button.TextSize = 16
-  button.Parent = frame
-  
-  local activated = false
-  
-  local function toggle()
-    activated = not activated
-    button.Text = activated and "Activate" or "Deactivate"
-    while activated do
-      local args = {
-        [1] = 0.01,
-        [2] = CFrame.new(-254.2939910888672, 112.13581848144531, -119.27256774902344) * CFrame.Angles(-2.029526710510254, 0.5662040710449219, 2.314905881881714),
-        [3] = {
-          ["2617721424"] = Vector3.new(-273.400146484375, -724.8031005859375, -20.92414093017578),
-        },
-        [4] = {
-          [1] = 910,
-          [2] = 154
-        }
-      }
-      game:GetService("ReplicatedStorage").Remotes.ParryAttempt:FireServer(unpack(args))
-      game:GetService("RunService").Heartbeat:Wait(0.01)
-    end
-  end
-  
-  button.MouseButton1Click:Connect(toggle)
-  
-  -- Adicionar keybind "E" para ativar o botão
-  local UserInputService = game:GetService("UserInputService")
-  local eKeyPressed = false
-  
-  UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
-    if input.KeyCode == Enum.KeyCode.E and not gameProcessedEvent then
-      eKeyPressed = true
-      toggle()
-    end
-  end)
-  
-  UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
-    if input.KeyCode == Enum.KeyCode.E then
-      eKeyPressed = false
-    end
-  end)
-  
-  local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
-  local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
-  
-  Notification:Notify(
-    {Title = "Berserk Hub", Description = "Obrigado por estar usando o nosso script    /   Black Hub"},
-    {OutlineColor = Color3.fromRGB(80, 80, 80), Time = 5, Type = "option"},
-    {Image = "http://www.roblox.com/asset/?id=6023426923", ImageColor = Color3.fromRGB(255, 84, 84), Callback = function(State) print(tostring(State)) end}
-  )
-end
-})
-
 AddKeybind(Main, {
   Name = "Spam Pc",
   KeyCode = "E",
   Default = false,
   Callback = function(Value)
-       parryButtonPress:Fire().Heartbeat:Wait(0.001).Heartbeat:Wait(0.001).Heartbeat:Wait(0.001).Heartbeat:Wait(0.001).Heartbeat:Wait(0.001).Heartbeat:Wait(0.001).Heartbeat:Wait(0.001).Heartbeat:Wait(0.001).Heartbeat:Wait(0.001)
+  local args = {
+    [1] = 0.5,
+    [2] = CFrame.new(-304.2098693847656, 54.966827392578125, -61.844940185546875) * CFrame.Angles(-1.6262654066085815, 0.9977119565010071, 1.6367844343185425),
+    [3] = {
+        ["Bot 1973"] = Vector3.new(337.3268737792969, 134.3238525390625, 74.89689636230469),
+        ["blackhub6"] = Vector3.new(475.99993896484375, 212.76919555664062, 49.29396057128906)
+    },
+    [4] = {
+        [1] = 69,
+        [2] = 225
+    }
+}
+
+game:GetService("ReplicatedStorage").Remotes.ParryAttempt:FireServer(unpack(args))
+game:GetService("RunService").Heartbeat:Wait(0.01)
 end
+})
+
+AddButton(Main, {
+  Name = "Auto Detect",
+  Callback = function()
+  loadstring(game:HttpGet("https://pastefy.app/fXr5ymgk/raw",true))()
+  end
 })
 
 local Dropdownpet = AddDropdown(Main, {
