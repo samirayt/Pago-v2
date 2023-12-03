@@ -641,42 +641,12 @@ local Toggle = AddToggle(Main, {
   end
 })
 
-AddKeybind(Main, {
-  Name = "Spam Pc",
-  KeyCode = "E",
-  Default = false,
-  Callback = function(Value)
-  local args = {
-    [1] = 0.5,
-    [2] = CFrame.new(-304.2098693847656, 54.966827392578125, -61.844940185546875) * CFrame.Angles(-1.6262654066085815, 0.9977119565010071, 1.6367844343185425),
-    [3] = {
-        ["Bot 1973"] = Vector3.new(337.3268737792969, 134.3238525390625, 74.89689636230469),
-        ["blackhub6"] = Vector3.new(475.99993896484375, 212.76919555664062, 49.29396057128906)
-    },
-    [4] = {
-        [1] = 69,
-        [2] = 225
-    }
-}
-
-game:GetService("ReplicatedStorage").Remotes.ParryAttempt:FireServer(unpack(args))
-game:GetService("RunService").Heartbeat:Wait(0.01)
-end
-})
-
 local Toggle = AddToggle(Main, {
   Name = "Auto detect",
-  Default = true,
+  Default = false,
   Callback = function(Value)
   loadstring(game:HttpGet("https://raw.githubusercontent.com/samirayt/SCRIPT-FREE/main/Gratis"))()
-  end
-})
-
-local Toggle = AddToggle(Main, {
-  Name = "Auto detectV1",
-  Default = true,
-  Callback = function(Value)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/samirayt/Ksksk/main/Script%20pago"))()
+ loadstring(game:HttpGet("https://raw.githubusercontent.com/samirayt/Ksksk/main/Script%20pago"))()
 end
 })
 
