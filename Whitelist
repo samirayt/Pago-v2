@@ -388,8 +388,8 @@ local heartbeatConnection
 
 MakeWindow({
   Hub = {
-    Title = "Berserk Hub Paid",
-    Animation = "Berserk Hub Paid"
+    Title = "Berserk Hub",
+    Animation = "Berserk Hub : BladeBall"
   },
   Key = {
     KeySystem = false,
@@ -430,7 +430,7 @@ local Misc = MakeTab({Name = "Misc"})
 local section01 = AddSection(Main, {"AutoRebater"})
 
 local ToggleParry = AddToggle(Main, {
-  Name = "AutoParryV2",
+  Name = "AutoParry",
   Default = false,
   Callback = function(Value)
     if Value then
@@ -441,6 +441,176 @@ local ToggleParry = AddToggle(Main, {
             
         end
   end
+})
+
+local Toggle = AddToggle(Main, {
+  Name = "Auto Rapture",
+  Default = false,
+  Callback = function(Value)
+  local function chooseNewFocusedBall()
+    local balls = ballsFolder:GetChildren()
+    for _, ball in ipairs(balls) do
+        if ball:GetAttribute("realBall") ~= nil and ball:GetAttribute("realBall") == true then
+            focusedBall = ball
+            print(focusedBall.Name)
+            break
+        elseif ball:GetAttribute("target") ~= nil then
+            focusedBall = ball
+            print(focusedBall.Name)
+            break
+        end
+    end
+    
+    if focusedBall == nil then
+        print("Debug: Could not find a ball that's the realBall or has a target.")
+        wait(1)
+        chooseNewFocusedBall()
+    end
+    return focusedBall
+end
+
+local function getDynamicThreshold(ballVelocityMagnitude)
+    if ballVelocityMagnitude > 60 then
+        return math.max(25, BASE_THRESHOLD - (ballVelocityMagnitude * VELOCITY_SCALING_FACTOR_FAST))
+    else
+        return math.min(10, BASE_THRESHOLD + (ballVelocityMagnitude * VELOCITY_SCALING_FACTOR_SLOW))
+    end
+end
+
+local function timeUntilImpact(ballVelocity, distanceToPlayer, playerVelocity)
+    if not character then return end
+    local directionToPlayer = (character.HumanoidRootPart.Position - focusedBall.Position).Unit
+    local velocityTowardsPlayer = ballVelocity:Dot(directionToPlayer) - playerVelocity:Dot(directionToPlayer)
+    
+    if velocityTowardsPlayer <= 10 then
+        return math.huge
+    end
+    
+    return (distanceToPlayer - sliderValue) / velocityTowardsPlayer
+end
+
+local function updateDistanceVisualizer()
+    local charPos = character and character.PrimaryPart and character.PrimaryPart.Position
+    if charPos and focusedBall then
+        if distanceVisualizer then
+            distanceVisualizer:Destroy()
+        end
+
+        local timeToImpactValue = timeUntilImpact(focusedBall.Velocity, (focusedBall.Position - charPos).Magnitude, character.PrimaryPart.Velocity)
+        local ballFuturePosition = focusedBall.Position + focusedBall.Velocity * timeToImpactValue
+
+        distanceVisualizer = Instance.new("Part")
+        distanceVisualizer.Size = Vector3.new(1, 1, 1)
+        distanceVisualizer.Anchored = true
+        distanceVisualizer.CanCollide = false
+        distanceVisualizer.Position = ballFuturePosition
+        distanceVisualizer.Parent = workspace    
+    end
+end
+
+local function checkIfTarget()
+    for _, v in pairs(ballsFolder:GetChildren()) do
+        if v:IsA("Part") and v.BrickColor == BrickColor.new("Really red") then 
+            print("Ball is targetting player.")
+            return true 
+        end 
+    end 
+    return false
+end
+
+local function isCooldownInEffect(uigradient)
+    return uigradient.Offset.Y < 0.5
+end
+
+
+local function checkBallDistance()
+    if not character or not checkIfTarget() then return end
+
+    local charPos = character.PrimaryPart.Position
+    local charVel = character.PrimaryPart.Velocity
+
+    if focusedBall and not focusedBall.Parent then
+        print("Focused ball lost parent. Choosing a new focused ball.")
+        chooseNewFocusedBall()
+    end
+    if not focusedBall then 
+        print("No focused ball.")
+        chooseNewFocusedBall()
+    end
+
+    local ball = focusedBall
+    local distanceToPlayer = (ball.Position - charPos).Magnitude
+    local ballVelocityTowardsPlayer = ball.Velocity:Dot((charPos - ball.Position).Unit)
+    
+    if distanceToPlayer < 15 then
+        parryButtonPress:Fire()
+        task.wait()
+    end
+
+    if timeUntilImpact(ball.Velocity, distanceToPlayer, charVel) < getDynamicThreshold(ballVelocityTowardsPlayer) then
+        if (character.Abilities["Raging Deflection"].Enabled or character.Abilities["Rapture"].Enabled) and UseRage == true then
+            if not isCooldownInEffect(uigrad2) then
+                abilityButtonPress:Fire()
+            end
+
+            if isCooldownInEffect(uigrad2) and not isCooldownInEffect(uigrad1) then
+                parryButtonPress:Fire()
+                if notifyparried == true then
+                    notify("Auto Parry", "Manually Parried Ball (Ability on CD)", 0.3)
+                end
+            end
+
+        elseif not isCooldownInEffect(uigrad1) then
+            print(isCooldownInEffect(uigrad1))
+            parryButtonPress:Fire()
+            if notifyparried == true then
+                notify("Auto Parry", "Automatically Parried Ball", 0.3)
+            end
+            task.wait(0.3)
+        end
+    end
+end
+
+
+local function autoParryCoroutine()
+    while isRunning do
+        checkBallDistance()
+        updateDistanceVisualizer()
+        task.wait()
+    end
+end
+
+
+
+localPlayer.CharacterAdded:Connect(function(newCharacter)
+    character = newCharacter
+    chooseNewFocusedBall()
+    updateDistanceVisualizer()
+end)
+
+localPlayer.CharacterRemoving:Connect(function()
+    if distanceVisualizer then
+        distanceVisualizer:Destroy()
+        distanceVisualizer = nil
+    end
+end)
+
+
+
+local function startAutoParry()
+    print("Script successfully ran.")
+    
+    chooseNewFocusedBall()
+    
+    isRunning = true
+    local co = coroutine.create(autoParryCoroutine)
+    coroutine.resume(co)
+end
+
+local function stopAutoParry()
+    isRunning = false
+end
+    end
 })
 
 --Codigo
@@ -462,11 +632,98 @@ local Toggle = AddToggle(Main, {
   end
 })
 
-local ToggleAuto = AddToggle(Main, {
-  Name = "Auto Spam",
+local Toggle = AddToggle(Main, {
+  Name = "Manual SpamV1",
   Default = false,
   Callback = function(Value)
+  local gui = Instance.new("ScreenGui")
+  gui.ResetOnSpawn = false
+  gui.Parent = game.CoreGui
+  
+  local frame = Instance.new("Frame")
+  frame.Position = UDim2.new(0, 40, 0, 40)
+  frame.Size = UDim2.new(0, 70, 0, 50)
+  frame.BackgroundColor3 = Color3.new(0, 0, 0)
+  frame.BorderSizePixel = 0
+  frame.Parent = gui
+  
+  local button = Instance.new("TextButton")
+  button.Text = "Deactivate"
+  button.Size = UDim2.new(1, -10, 1, -10)
+  button.Position = UDim2.new(0, 20, 0, 20)
+  button.BackgroundColor3 = Color3.new(1, 1, 1)
+  button.BorderColor3 = Color3.new(0, 0, 0)
+  button.BorderSizePixel = 1
+  button.Font = Enum.Font.SourceSans
+  button.TextColor3 = Color3.new(0, 0, 0)
+  button.TextSize = 16
+  button.Parent = frame
+  
+  local activated = false
+  
+  local function toggle()
+    activated = not activated
+    button.Text = activated and "Activate" or "Deactivate"
+    while activated do
+      local args = {
+        [1] = 0.01,
+        [2] = CFrame.new(-254.2939910888672, 112.13581848144531, -119.27256774902344) * CFrame.Angles(-2.029526710510254, 0.5662040710449219, 2.314905881881714),
+        [3] = {
+          ["2617721424"] = Vector3.new(-273.400146484375, -724.8031005859375, -20.92414093017578),
+        },
+        [4] = {
+          [1] = 910,
+          [2] = 154
+        }
+      }
+      game:GetService("ReplicatedStorage").Remotes.ParryAttempt:FireServer(unpack(args))
+      game:GetService("RunService").Heartbeat:Wait(0.01)
+    end
+  end
+  
+  button.MouseButton1Click:Connect(toggle)
+  
+  -- Adicionar keybind "E" para ativar o botão
+  local UserInputService = game:GetService("UserInputService")
+  local eKeyPressed = false
+  
+  UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if input.KeyCode == Enum.KeyCode.E and not gameProcessedEvent then
+      eKeyPressed = true
+      toggle()
+    end
+  end)
+  
+  UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
+    if input.KeyCode == Enum.KeyCode.E then
+      eKeyPressed = false
+    end
+  end)
+  
+  local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
+  local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
+  
+  Notification:Notify(
+    {Title = "Berserk Hub", Description = "Obrigado por estar usando o nosso script    /   Black Hub"},
+    {OutlineColor = Color3.fromRGB(80, 80, 80), Time = 5, Type = "option"},
+    {Image = "http://www.roblox.com/asset/?id=6023426923", ImageColor = Color3.fromRGB(255, 84, 84), Callback = function(State) print(tostring(State)) end}
+  )
+end
+})
+
+local Toggle = AddToggle(Main, {
+  Name = "Teste",
+  Default = false,
   loadstring(game:HttpGet("https://pastebin.com/raw/t2391h1A"))()
+end
+})
+
+local Toggle = AddToggle(Main, {
+  Name = "EmojiCustomizado",
+  Default = false,
+  Callback = function(Value)
+   _G.EmojiCustom = Value
+   Emoji()
   end
 })
 
@@ -533,6 +790,12 @@ local Toggle6 = AddToggle(Visual, {
   end
 })
 
+AddButton(Visual, {
+  Name = "Fps booster",
+  Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/SrTez/BladeBall_AntiLag/main/ByT3Z"))()
+end
+})
 
 --Tab04
 
