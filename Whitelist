@@ -430,14 +430,6 @@ local Misc = MakeTab({Name = "Misc"})
 local section01 = AddSection(Main, {"AutoRebater"})
 
 local ToggleParry = AddToggle(Main, {
-  Name = "AutoParryV1",
-  Default = false,
-  Callback = function(Value)
-  loadstring(game:HttpGet("https://pastebin.com/raw/t2391h1A"))()
-end
-})
-
-local ToggleParry = AddToggle(Main, {
   Name = "AutoParryV2",
   Default = false,
   Callback = function(Value)
