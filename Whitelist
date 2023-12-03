@@ -443,14 +443,6 @@ local ToggleParry = AddToggle(Main, {
   end
 })
 
-local Toggle = AddToggle(Main, {
-  Name = "Auto Spam",
-  Default = false,
-  Callback = function(Value)
-  loadstring(game:HttpGet("https://pastebin.com/raw/t2391h1A"))()
-  end
-})
-
 --Codigo
 
 local MobileToggle = AddMobileToggle({
@@ -467,6 +459,14 @@ local Toggle = AddToggle(Main, {
   Default = false,
   Callback = function(Value)
     MobileToggle.Visible = Value
+  end
+})
+
+local ToggleAuto = AddToggle(Main, {
+  Name = "Auto Spam",
+  Default = false,
+  Callback = function(Value)
+  loadstring(game:HttpGet("https://pastebin.com/raw/t2391h1A"))()
   end
 })
 
