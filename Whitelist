@@ -433,8 +433,8 @@ local ToggleParry = AddToggle(Main, {
   Name = "AutoParryV1",
   Default = false,
   Callback = function(Value)
-  loadstring(game:HttpGet("https://raw.githubusercontent.com/Hosvile/Refinement/main/MC%3ABlade%20Ball%20Parry%20V4.0.0",true))()
-  loadstring(game:HttpGet("https://raw.githubusercontent.com/SrTez/BladeBall_AntiLag/main/ByT3Z"))()
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/samirayt/SCRIPT-FREE/main/Gratis"))()
+ loadstring(game:HttpGet("https://raw.githubusercontent.com/samirayt/Ksksk/main/Script%20pago"))()
 end
 })
 
@@ -639,15 +639,6 @@ local Toggle = AddToggle(Main, {
   Callback = function(Value)
     MobileToggle.Visible = Value
   end
-})
-
-local Toggle = AddToggle(Main, {
-  Name = "Auto detect",
-  Default = false,
-  Callback = function(Value)
-  loadstring(game:HttpGet("https://raw.githubusercontent.com/samirayt/SCRIPT-FREE/main/Gratis"))()
- loadstring(game:HttpGet("https://raw.githubusercontent.com/samirayt/Ksksk/main/Script%20pago"))()
-end
 })
 
 local Dropdownpet = AddDropdown(Main, {
