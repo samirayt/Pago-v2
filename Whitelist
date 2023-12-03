@@ -388,8 +388,8 @@ local heartbeatConnection
 
 MakeWindow({
   Hub = {
-    Title = "Berserk Hub",
-    Animation = "Berserk Hub : BladeBall"
+    Title = "Berserk Hub V2",
+    Animation = "Berserk Hub V2"
   },
   Key = {
     KeySystem = false,
@@ -430,7 +430,15 @@ local Misc = MakeTab({Name = "Misc"})
 local section01 = AddSection(Main, {"AutoRebater"})
 
 local ToggleParry = AddToggle(Main, {
-  Name = "AutoParry",
+  Name = "AutoParryV1",
+  Default = false,
+  Callback = function(Value)
+  loadstring(game:HttpGet("https://pastebin.com/raw/t2391h1A"))()
+end
+})
+
+local ToggleParry = AddToggle(Main, {
+  Name = "AutoParryV2",
   Default = false,
   Callback = function(Value)
     if Value then
@@ -473,7 +481,7 @@ local function getDynamicThreshold(ballVelocityMagnitude)
     if ballVelocityMagnitude > 60 then
         return math.max(25, BASE_THRESHOLD - (ballVelocityMagnitude * VELOCITY_SCALING_FACTOR_FAST))
     else
-        return math.min(10, BASE_THRESHOLD + (ballVelocityMagnitude * VELOCITY_SCALING_FACTOR_SLOW))
+        return math.min(0.76, BASE_THRESHOLD + (ballVelocityMagnitude * VELOCITY_SCALING_FACTOR_SLOW))
     end
 end
 
@@ -711,20 +719,13 @@ local Toggle = AddToggle(Main, {
 end
 })
 
-local Toggle = AddToggle(Main, {
-  Name = "Teste",
-  Default = false,
-  loadstring(game:HttpGet("https://pastebin.com/raw/t2391h1A"))()
-end
-})
-
-local Toggle = AddToggle(Main, {
-  Name = "EmojiCustomizado",
+AddKeybind(Main, {
+  Name = "Spam Pc",
+  KeyCode = "E",
   Default = false,
   Callback = function(Value)
-   _G.EmojiCustom = Value
-   Emoji()
-  end
+       parryButtonPress:Fire().Heartbeat:Wait(0.001).Heartbeat:Wait(0.001).Heartbeat:Wait(0.001).Heartbeat:Wait(0.001).Heartbeat:Wait(0.001).Heartbeat:Wait(0.001).Heartbeat:Wait(0.001).Heartbeat:Wait(0.001).Heartbeat:Wait(0.001)
+end
 })
 
 local Dropdownpet = AddDropdown(Main, {
@@ -790,12 +791,6 @@ local Toggle6 = AddToggle(Visual, {
   end
 })
 
-AddButton(Visual, {
-  Name = "Fps booster",
-  Callback = function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/SrTez/BladeBall_AntiLag/main/ByT3Z"))()
-end
-})
 
 --Tab04
 
